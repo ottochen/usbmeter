@@ -51,6 +51,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="CLI for USB Meter")
     parser.add_argument("--addr", dest="addr", type=str, help="Address of USB Meter")
     parser.add_argument("--graph", dest="graph", help="Live graphing", nargs="?", default=False)
+    parser.add_argument("--inr", dest="interval", help="Polling interval (ms)", type=int, default=10)
     parser.add_argument(
         "--out",
         dest="out",
@@ -131,6 +132,8 @@ if __name__ == "__main__":
     else:
         json_file = None
 
+    polling_inter = float(args.interval)/1000.0
+
     d = b""
     while True:
 
@@ -178,6 +181,6 @@ if __name__ == "__main__":
             json_file.write(json.dumps(data, indent=4, sort_keys=True, default=str))
 
         d = b""
-        time.sleep(0.01)
+        time.sleep(polling_inter)
 
     sock.close()
