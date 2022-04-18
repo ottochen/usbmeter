@@ -9,6 +9,7 @@ import argparse
 import datetime
 import time
 import pickle
+import json
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.dates import DayLocator, HourLocator, DateFormatter, drange
@@ -53,6 +54,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--out",
         dest="out",
+        type=str,
+        help="Filename to output data to",
+        required=False,
+        default="",
+    )
+    parser.add_argument(
+        "--json",
+        dest="jout",
         type=str,
         help="Filename to output data to",
         required=False,
@@ -117,6 +126,11 @@ if __name__ == "__main__":
     else:
         pickle_file = None
 
+    if args.jout != "":
+        json_file = open(args.jout, "w")
+    else:
+        json_file = None
+
     d = b""
     while True:
 
@@ -159,6 +173,9 @@ if __name__ == "__main__":
 
         if pickle_file is not None:
             pickle.dump(data, pickle_file)
+
+        if json_file is not None:
+            json_file.write(json.dumps(data, indent=4, sort_keys=True, default=str))
 
         d = b""
         time.sleep(0.01)
